@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package>
+  <name>splashscreen</name>
+  <version>0.0.0</version>
+  <description>Contains a single node which will show a fullscreen splashscreen with text on it. The splashscreen can be dismissed with the mouse, keyboard, or a ROS message.</description>
+  <maintainer email="lazewatd@engr.oregonstate.edu">Dan Lazewatsky</maintainer>
+  <license>BSD</license>
+  <author email="lazewatd@engr.oregonstate.edu">Dan Lazewatsky</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>python-pyside</run_depend>
+</package>
