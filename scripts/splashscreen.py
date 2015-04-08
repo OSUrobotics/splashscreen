@@ -12,6 +12,7 @@ class Splashscreen(QtGui.QLabel):
     def __init__(self, msg, *args, **kwargs):
 
         super(Splashscreen, self).__init__(msg, *args, **kwargs)
+        self.initedWithMsg = len(msg) > 0
         rospy.init_node('splashscreen')
         self.startupTime = rospy.Time.now()
         rospy.Subscriber('click', Empty, self.clickCb)
@@ -25,7 +26,8 @@ class Splashscreen(QtGui.QLabel):
         self.hideScreen.connect(self.mousePressEvent)
 
     def updateMessageCb(self, msg):
-        self.updateMessage.emit(msg.data)
+        if not self.initedWithMsg or (rospy.Time.now() - self.startupTime).to_sec() > 0.1:
+            self.updateMessage.emit(msg.data)
 
     def doUpdateMessage(self, msg):
         self.setText(msg)
