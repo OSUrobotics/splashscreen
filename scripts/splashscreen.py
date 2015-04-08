@@ -13,6 +13,7 @@ class Splashscreen(QtGui.QLabel):
 
         super(Splashscreen, self).__init__(msg, *args, **kwargs)
         rospy.init_node('splashscreen')
+        self.startupTime = rospy.Time.now()
         rospy.Subscriber('click', Empty, self.clickCb)
         rospy.Subscriber('~message', String, self.updateMessageCb)
         self.advance_pub = rospy.Publisher('~advance', Empty)
@@ -42,17 +43,29 @@ class Splashscreen(QtGui.QLabel):
             self.advance()
 
     def advance(self):
-        self.hide()
-        self.advance_pub.publish()
+        if (rospy.Time.now() - self.startupTime).to_sec() > 0.1:
+            self.showNormal()
+            self.hide()
+            self.advance_pub.publish()
+
+    def maybeQuit(self):
+        if rospy.is_shutdown():
+            self.showNormal()
+            QtGui.QApplication.quit()
+            return True
+        return False
+
 
 if __name__ == '__main__':
     argv = rospy.myargv()
     app = QtGui.QApplication(argv)
     t = QtCore.QTimer()
-    t.timeout.connect(lambda: rospy.is_shutdown() and QtGui.QApplication.quit())
-    t.start(500)
     message = argv[1] if len(argv) > 1 else ''
     ss = Splashscreen(message)
+    t.timeout.connect(ss.maybeQuit)
+    t.start(500)
     if len(message) > 0:
         ss.showFullScreen()
+    else:
+        ss.showMinimized()
     sys.exit(app.exec_())
