@@ -12,7 +12,6 @@ class MouseCapture(QtGui.QLabel):
     def __init__(self, frame_id, scale, offset, *args, **kwargs):
         super(MouseCapture, self).__init__(*args, **kwargs)
         self.setMouseTracking(True)
-        rospy.init_node('mouse_to_point')
         self.frame_id = frame_id
         self.scale = scale
         self.offset = np.array(offset)
@@ -49,7 +48,8 @@ if __name__ == '__main__':
     argv = rospy.myargv()
     app = QtGui.QApplication(argv)
     t = QtCore.QTimer()
-    frame_id = rospy.get_param('~frame_id', '')
+    rospy.init_node('mouse_to_point')
+    frame_id = rospy.get_param('~frame_id')
     offset_x = rospy.get_param('~offset_x', 0)
     offset_y = rospy.get_param('~offset_y', 0)
     scale = rospy.get_param('~scale', 0.001)
