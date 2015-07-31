@@ -17,7 +17,7 @@ class Splashscreen(QtGui.QLabel):
         self.startupTime = rospy.Time.now()
         rospy.Subscriber('click', Empty, self.clickCb)
         rospy.Subscriber('~message', String, self.updateMessageCb)
-        self.advance_pub = rospy.Publisher('~advance', Empty)
+        self.advance_pub = rospy.Publisher('~advance', Empty, queue_size=1)
 
         self.setFont(QtGui.QFont('Arial', 42))
         self.setAlignment(QtCore.Qt.AlignCenter)
